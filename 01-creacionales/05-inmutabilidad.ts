@@ -1,3 +1,4 @@
+import { COLORS } from './../helpers/colors.ts';
 /**
  * ! Inmutabilidad con copia
  * Aunque la inmutabilidad es una buena práctica, no siempre es posible.
@@ -6,3 +7,61 @@
  *  * Es útil para mantener un historial de estados en aplicaciones interactivas.
  *
  */
+class CodeEditorState {
+    
+    readonly content: string;
+    readonly cursorPosition: number;
+    readonly unsaveChange: boolean;
+
+    constructor(content: string, cursorPosition: number, unsaveChange: boolean){
+        this.content = content;
+        this.cursorPosition = cursorPosition;
+        this.unsaveChange = unsaveChange;
+    }
+
+
+    copyWith({
+        content,
+        cursorPosition,
+        unsaveChange
+    }: Partial<CodeEditorState>): CodeEditorState{
+        return new CodeEditorState(
+            content ?? this.content,
+            cursorPosition ?? this.cursorPosition,
+            unsaveChange ?? this.unsaveChange
+        );
+    }
+
+    displayState() {
+        console.log('Estado del editor: ', COLORS.green);
+        console.log(`
+            Contenido: ${this.content}
+            Cursor Pos: ${this.cursorPosition}
+            Unsave changes: ${this.unsaveChange}
+            `)
+    }
+}
+
+
+class CodeEditorHistory{
+    private history: CodeEditorState[] = []
+    private currentIndex: number = -1;
+
+    save(state: CodeEditorState): void {
+        if(this.currentIndex < this.history.length - 1){
+            this.history = this.history.splice(0, this.currentIndex + 1)
+        }
+
+        this.history.push(state)
+        this.currentIndex++ 
+    }
+
+
+    redo(): CodeEditorState | null {
+        if(this.currentIndex < this.history.length -1 ){
+            this.currentIndex ++;
+            return this.history[this.currentIndex]
+        }
+        return null;
+    } 
+}

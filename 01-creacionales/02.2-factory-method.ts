@@ -35,20 +35,21 @@ interface Report {
 // Implementar SalesReport e InventoryReport
 
 class SalesReport implements Report {
-  // TODO: implementar el método e imprimir en consola:
-  // 'Generando reporte de ventas...'
+  generate(): void {
+    console.log('Reportes de ventas creado')
+  }
 }
 
 class InventoryReport implements Report {
-  // TODO: implementar el método e imprimir en consola:
-  // 'Generando reporte de inventario...'
+  generate(): void {
+    console.log('Reporte de inventario creado')
+  }
 }
 
 // 3. Clase Base ReportFactory con el Método Factory
-
+// para que no sean totalmente expuestos el método hay que colocar el protected asi solo se puede usar desde los métodos extendidos
 abstract class ReportFactory {
-  abstract createReport(): Report;
-
+  protected abstract createReport(): Report;
   generateReport(): void {
     const report = this.createReport();
     report.generate();
@@ -58,14 +59,14 @@ abstract class ReportFactory {
 // 4. Clases Concretas de Fábricas de Reportes
 
 class SalesReportFactory extends ReportFactory {
-  createReport(): Report {
-    throw new Error('Method not implemented.');
+  override createReport(): Report {
+    return new SalesReport();
   }
 }
 
 class InventoryReportFactory extends ReportFactory {
-  createReport(): Report {
-    throw new Error('Method not implemented.');
+  override createReport(): Report {
+    return new InventoryReport();
   }
 }
 
@@ -74,10 +75,7 @@ class InventoryReportFactory extends ReportFactory {
 function main() {
   let reportFactory: ReportFactory;
 
-  const reportType = prompt(
-    '¿Qué tipo de reporte deseas? %c(sales/inventory)',
-    COLORS.red
-  );
+  const reportType = prompt('¿Qué tipo de reporte deseas? (sales/inventory)');
 
   if (reportType === 'sales') {
     reportFactory = new SalesReportFactory();
