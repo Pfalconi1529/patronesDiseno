@@ -41,6 +41,15 @@ class PushNotificationChannel implements NotificationChannel {
 // Define la propiedad `channel` y el método `notify`
 
 abstract class Notification {
+  protected channel: NotificationChannel;
+  constructor(channel: NotificationChannel){
+    this.channel = channel;
+  }
+
+  abstract setChannel(channel: NotificationChannel): void;
+
+  abstract notify(message: string): void;
+
   // TODO: Definir la propiedad `channel` de tipo NotificationChannel
   // TODO: Definir el constructor de la clase
   // TODO: Definir el método `notify` y `setChannel` (abstractos)
@@ -49,42 +58,41 @@ abstract class Notification {
 // 4. Clases Concretas de Notificaciones
 
 class AlertNotification extends Notification {
-  notify(message: string): void {
-    console.log('\n%cNotificación de Alerta:', COLORS.red);
-    // TODO: Enviar el mensaje a través del canal
-    throw new Error('Method not implemented.');
+  override setChannel(channel: NotificationChannel): void {
+    this.channel = channel;
   }
-
-  setChannel(channel: NotificationChannel): void {
-    // TODO: Asignar el canal a la propiedad `channel`
-    throw new Error('Method not implemented.');
+  
+  override notify(message: string): void {
+   this.channel.send(message);
+    // TODO: Enviar el mensaje a través del canal
+    
   }
 }
 
 class ReminderNotification extends Notification {
-  notify(message: string): void {
-    console.log('\n%cNotificación de Recordatorio:', COLORS.blue);
-    // TODO: Enviar el mensaje a través del canal
-    throw new Error('Method not implemented.');
+  override setChannel(channel: NotificationChannel): void {
+    this.channel = channel;
   }
 
-  setChannel(channel: NotificationChannel): void {
-    // TODO: Asignar el canal a la propiedad `channel`
-    throw new Error('Method not implemented.');
+  override notify(message: string): void {
+    this.channel.send(message);
+   
   }
+
+ 
 }
 
 class PushNotification extends Notification {
+  override setChannel(channel: NotificationChannel): void {
+    this.channel = channel;
+  }
   override notify(message: string): void {
-    console.log('\n%cNotificación de Push:', COLORS.green);
+    this.channel.send(message);
     // TODO: Enviar el mensaje a través del canal
-    throw new Error('Method not implemented.');
+    
   }
 
-  override setChannel(channel: NotificationChannel): void {
-    // TODO: Asignar el canal a la propiedad `channel`
-    throw new Error('Method not implemented.');
-  }
+ 
 }
 
 // 5. Código Cliente para Probar el Bridge

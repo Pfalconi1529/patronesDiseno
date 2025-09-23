@@ -1,3 +1,4 @@
+import { COLORS } from './../helpers/colors.ts';
 /**
  * ! Patrón Adapter
  *  Permite que objetos con interfaces incompatibles trabajen juntos, también es muy
@@ -11,7 +12,6 @@
  * https://refactoring.guru/es/design-patterns/adapter
  */
 
-import { COLORS } from '../helpers/colors.ts';
 
 // 1. Interfaz PaymentProcessor
 interface PaymentProcessor {
@@ -45,17 +45,33 @@ class MercadoPagoService {
 // 3. Clases Adaptadoras
 
 // Adaptador para PayPal
-class PayPalAdapter {
+class PayPalAdapter implements PaymentProcessor{
+  private paypal: PayPalService = new PayPalService();
+  
+  processPayment(amount: number): void {
+    this.paypal.sendPayment(amount);
+  }
+
   // TODO: Implementar la interfaz PaymentProcessor
 }
 
 // Adaptador para Stripe
-class StripeAdapter {
+class StripeAdapter implements PaymentProcessor{
+  private stripe = new StripeService();
+  processPayment(amount: number): void {
+   this.stripe.makeCharge(amount);
+  }
+
   // TODO: Implementar la interfaz PaymentProcessor
 }
 
 // Adaptador para MercadoPago
-class MercadoPagoAdapter {
+class MercadoPagoAdapter implements PaymentProcessor{
+  private mercadoPago = new MercadoPagoService();
+  
+  processPayment(amount: number): void {
+    this.mercadoPago.pay(amount);
+  }
   // TODO: Implementar la interfaz PaymentProcessor
 }
 
